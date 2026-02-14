@@ -137,7 +137,7 @@ function Wizard3() {
             </button>
 
             <button
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/signup")}
               style={{
                 padding: "10px 24px",
                 background: "#7A3A5C",

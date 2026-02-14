@@ -4,7 +4,9 @@ import Splash from "./pages/Splash";
 import Wizard1 from "./pages/Wizard1";
 import Wizard2 from "./pages/Wizard2";
 import Wizard3 from "./pages/Wizard3";
-// import Login from "./pages/Login";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";   // ✅ Capital S
+import FakeCall from "./pages/FakeCall";
 
 function App() {
   return (
@@ -14,7 +16,13 @@ function App() {
         <Route path="/wizard1" element={<Wizard1 />} />
         <Route path="/wizard2" element={<Wizard2 />} />
         <Route path="/wizard3" element={<Wizard3 />} />
-        {/* <Route path="/login" element={<Login />} />  */}
+
+        {/* After wizard3 → Signup */}
+        <Route path="/signup" element={<Signup />} />
+
+        {/* Login page */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/fakecall" element={<FakeCall />} />
       </Routes>
     </BrowserRouter>
   );
