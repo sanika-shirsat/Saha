@@ -5,8 +5,9 @@ import Wizard1 from "./pages/Wizard1";
 import Wizard2 from "./pages/Wizard2";
 import Wizard3 from "./pages/Wizard3";
 import Login from "./pages/Login";
-import Signup from "./pages/Signup";   // ✅ Capital S
+import Signup from "./pages/Signup";
 import FakeCall from "./pages/FakeCall";
+import InCall from "./pages/InCall";   // ✅ ADD THIS
 
 function App() {
   return (
@@ -17,12 +18,11 @@ function App() {
         <Route path="/wizard2" element={<Wizard2 />} />
         <Route path="/wizard3" element={<Wizard3 />} />
 
-        {/* After wizard3 → Signup */}
         <Route path="/signup" element={<Signup />} />
-
-        {/* Login page */}
         <Route path="/login" element={<Login />} />
+
         <Route path="/fakecall" element={<FakeCall />} />
+        <Route path="/incall" element={<InCall />} />   {/* ✅ ADD THIS */}
       </Routes>
     </BrowserRouter>
   );
