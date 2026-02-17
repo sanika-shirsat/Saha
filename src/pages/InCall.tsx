@@ -120,7 +120,7 @@ function InCall() {
 
         {/* END CALL BUTTON */}
         <div
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
           style={{
             position: "absolute",
             left: "150px",

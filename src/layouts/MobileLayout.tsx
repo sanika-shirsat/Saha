@@ -20,7 +20,7 @@ function MobileLayout({ children }: Props) {
           height: "844px",
           background: "#E9C6FF", // 🟣 app background
           borderRadius: "24px",
-          overflow: "hidden",
+          overflow: "auto",
           position: "relative",
           boxShadow: "0 0 40px rgba(0,0,0,0.8)",
         }}

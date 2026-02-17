@@ -1,0 +1,15 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+/* Hide scrollbar but allow scrolling */
+.mobile-scroll {
+  overflow-y: scroll;
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
+}
+
+.mobile-scroll::-webkit-scrollbar {
+  display: none;                /* Chrome/Safari */
+}
