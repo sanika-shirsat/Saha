@@ -6,21 +6,20 @@ function MobileLayout({ children }: Props) {
   return (
     <div
       style={{
-        background: "#000000", // ⬛ outside showcase bg
+        background: "#000",
         minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      {/* 📱 Mobile Frame */}
       <div
         style={{
           width: "390px",
           height: "844px",
-          background: "#E9C6FF", // 🟣 app background
+          background: "#E9C6FF",
           borderRadius: "24px",
-          overflow: "auto",
+          overflow: "hidden",   // important
           position: "relative",
           boxShadow: "0 0 40px rgba(0,0,0,0.8)",
         }}

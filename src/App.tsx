@@ -1,3 +1,4 @@
+console.log("APP LOADED - VERSION 1");
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Splash from "./pages/Splash";
@@ -15,7 +16,8 @@ import About from "./pages/About";
 import WomensLaw from "./pages/WomensLaw";
 import SafetyTips from "./pages/SafetyTips";
 import Settings from "./pages/Settings";
-
+import Helplines from "./pages/Helplines";
+import ManageUnsafeZones from "./pages/ManageUnsafeZones";
 
 
 
@@ -35,12 +37,13 @@ function App() {
 
         {/* ===== Main App ===== */}
         <Route path="/home" element={<Home />} />
+        <Route path="/helplines" element={<Helplines />} />
 
         {/* ===== Features ===== */}
         <Route path="/fakecall" element={<FakeCall />} />
         <Route path="/incall" element={<InCall />} />
-          
-          
+         
+      <Route path="/unsafe-zones" element={<ManageUnsafeZones />} />          
         <Route path="/about" element={<About />} />
 
         <Route path="/womens-law" element={<WomensLaw />} />

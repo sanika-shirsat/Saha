@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=ABeeZee&display=swap');
+
+.manage-page{
+  font-family: 'ABeeZee', sans-serif;
+  background:#FFF7FA;
+  min-height:100vh;
+}
+
+.manage-container{
+  max-width:900px;
+  margin:auto;
+  padding:110px 20px 60px 20px;
+}
+
+.manage-title{
+  font-size:26px;
+  font-weight:600;
+  color:#7A3A5C;
+  margin-bottom:6px;
+}
+
+.manage-subtext{
+  color:#7A3A5C;
+  opacity:.7;
+  margin-bottom:25px;
+}
+
+.map-box{
+  height:360px;
+  border-radius:20px;
+  overflow:hidden;
+  margin-bottom:25px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.08);
+}
+
+.controls{
+  background:#F2E6EF;
+  padding:18px;
+  border-radius:18px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:25px;
+}
+
+.controls input{
+  flex:1;
+  min-width:160px;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #D8A1B2;
+  font-family:'ABeeZee';
+}
+
+.add-btn{
+  background:#7A3A5C;
+  color:white;
+  border:none;
+  padding:12px 20px;
+  border-radius:14px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.add-btn:hover{
+  background:#5f2847;
+}
+
+.zone-list{
+  margin-top:20px;
+}
+
+.zone-item{
+  background:white;
+  padding:14px 16px;
+  border-radius:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.05);
+}
+
+.zone-actions{
+  display:flex;
+  gap:8px;
+}
+
+.zone-actions button{
+  background:#7A3A5C;
+  color:white;
+  border:none;
+  border-radius:8px;
+  padding:6px 12px;
+  cursor:pointer;
+}
+
+.zone-actions button:hover{
+  background:#5f2847;
+}

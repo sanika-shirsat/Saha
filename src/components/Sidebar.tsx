@@ -31,12 +31,12 @@ function Sidebar({ isOpen, onClose }: Props) {
         {[
           { name: "Home", path: "/home" },
           { name: "Manage Guardians", path: "/manage-guardian" },
-          { name: "Manage Safe Zones", path: "/manage-safezones" },
-          { name: "Women’s Law", path: "/womens-law" },
+          { name: "Manage Unsafe Zones", path: "/unsafe-zones" },          { name: "Women’s Law", path: "/womens-law" },
           { name: "Safety Tips", path: "/safety-tips" },
           { name: "Settings", path: "/settings" },
           { name: "About Us", path: "/about" },
-          { name: "Settings", path: "/settings" },
+          
+          
 
           
 
