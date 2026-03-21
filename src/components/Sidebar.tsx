@@ -19,7 +19,7 @@ function Sidebar({ isOpen, onClose }: Props) {
           background: "#F2E6EF",
           boxShadow: "4px 0 20px rgba(0,0,0,0.25)",
           transition: "left 0.3s ease",
-          zIndex: 100,
+          zIndex: 800,
           paddingTop: "90px",
           paddingLeft: "20px",
           paddingRight: "20px",

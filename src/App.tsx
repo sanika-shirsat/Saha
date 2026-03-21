@@ -18,6 +18,7 @@ import SafetyTips from "./pages/SafetyTips";
 import Settings from "./pages/Settings";
 import Helplines from "./pages/Helplines";
 import ManageUnsafeZones from "./pages/ManageUnsafeZones";
+import ManageGuardian from "./pages/ManageGuardian";
 
 
 
@@ -43,7 +44,9 @@ function App() {
         <Route path="/fakecall" element={<FakeCall />} />
         <Route path="/incall" element={<InCall />} />
          
-      <Route path="/unsafe-zones" element={<ManageUnsafeZones />} />          
+      <Route path="/unsafe-zones" element={<ManageUnsafeZones />} /> 
+      <Route path="/manage-guardian" element={<ManageGuardian />} />
+
         <Route path="/about" element={<About />} />
 
         <Route path="/womens-law" element={<WomensLaw />} />

@@ -3,6 +3,24 @@ import { useNavigate } from "react-router-dom";
 import MobileLayout from "../layouts/MobileLayout";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import { db } from "../firebase";
+import { ref, onValue } from "firebase/database";
+import UnsafeMap from "../components/UnsafeMap";
+
+
+
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+
+import { predefinedUnsafeZones } from "../data/predefinedUnsafeZones";
+
+const markerIcon = new L.Icon({
+  iconUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+  iconSize: [25, 41],
+});
 
 function Home() {
 
@@ -11,54 +29,59 @@ function Home() {
 
   const [location, setLocation] = useState<[number, number] | null>(null);
   const [status, setStatus] = useState("Checking location...");
+  console.log("LOCATION:", location);
 
-  const unsafeZones = [
-    { name: "Station Area", lat: 19.076, lng: 72.877 },
-    { name: "Dark Street", lat: 19.082, lng: 72.880 },
-  ];
+  const [unsafeZones, setUnsafeZones] = useState<any[]>([]);
+
+ useEffect(() => {
+
+  if (!navigator.geolocation) {
+    setStatus("Location not supported");
+    return;
+  }
+
+  const watchId = navigator.geolocation.watchPosition(
+    (pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+
+      setLocation([lat, lng]);
+      setStatus("Location Active");
+    },
+    (err) => {
+      console.error(err);
+      setStatus("Location permission denied");
+    },
+    {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 5000,
+    }
+  );
+
+  return () => navigator.geolocation.clearWatch(watchId);
+
+}, []);
 
   useEffect(() => {
+  const zonesRef = ref(db, "unsafeZones");
 
-    if (!navigator.geolocation) {
-      setStatus("Location not supported");
-      return;
+  const unsub = onValue(zonesRef, (snapshot) => {
+    const data = snapshot.val();
+
+    if (data) {
+      const list = Object.entries(data).map(([key, value]: any) => ({
+        id: key,
+        ...value,
+      }));
+      setUnsafeZones(list);
+    } else {
+      setUnsafeZones([]);
     }
+  });
 
-    const interval = setInterval(() => {
-
-      navigator.geolocation.getCurrentPosition((pos) => {
-
-        const lat = pos.coords.latitude;
-        const lng = pos.coords.longitude;
-
-        setLocation([lat, lng]);
-
-        let unsafe = false;
-
-        unsafeZones.forEach(zone => {
-
-          const distance = Math.sqrt(
-            Math.pow(lat - zone.lat, 2) + Math.pow(lng - zone.lng, 2)
-          );
-
-          if (distance < 0.01) {
-            unsafe = true;
-            setStatus("⚠ Unsafe Zone: " + zone.name);
-          }
-
-        });
-
-        if (!unsafe) {
-          setStatus("You are Safe");
-        }
-
-      });
-
-    }, 10000);
-
-    return () => clearInterval(interval);
-
-  }, []);
+  return () => unsub();
+}, []);
 
   const shareLocation = () => {
 
@@ -197,17 +220,11 @@ function Home() {
 
       <div style={mapContainer}>
 
-        {location && (
-
-          <iframe
-            width="100%"
-            height="100%"
-            style={{ borderRadius: "14px", border: "none" }}
-            src={`https://maps.google.com/maps?q=${location[0]},${location[1]}&z=14&output=embed`}
-          />
-
-        )}
-
+        {location ? (
+            <UnsafeMap location={location} unsafeZones={unsafeZones} />
+          ) : (
+            <div>Loading map...</div>
+          )}
       </div>
 
     </div>
@@ -250,7 +267,7 @@ const contentStyle: React.CSSProperties = {
   flexDirection: "column",
   gap: "20px",
   overflowY: "auto",
-  paddingBottom: "160px",
+  paddingBottom: "260px",
 };
 
 const statusStyle: React.CSSProperties = {
@@ -327,31 +344,28 @@ const cardText: React.CSSProperties = {
 
 const mapSection: React.CSSProperties = {
   marginTop: "10px",
-  height: "300px",
+  height: "300px",              // ⭐ FIXED HEIGHT
   background: "#E4B6C7",
   borderRadius: "22px",
   border: "2px solid #7A3A5C",
   display: "flex",
-  flexDirection: "column",
-  padding: "18px",
+  flexDirection: "column",      // ⭐ IMPORTANT
+  padding: "12px",
   fontFamily: "'ABeeZee', sans-serif",
   color: "#7A3A5C",
   fontWeight: 600,
-  boxShadow: "0 6px 16px rgba(0,0,0,0.12)"
+  boxShadow: "0 6px 16px rgba(0,0,0,0.12)",
+  marginBottom: "100px",  // ⭐ ADD THIS
 };
 
 const bottomBar: React.CSSProperties = {
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  right: 0,
   height: "70px",
   background: "#C98CA2",
 };
 
 const sosWrapper: React.CSSProperties = {
-  position: "absolute",
-  bottom: "32px",
+  position: "absolute",        // ✅ FIXED
+  bottom: "20px",
   left: "50%",
   transform: "translateX(-50%)",
   width: "92px",
@@ -361,7 +375,8 @@ const sosWrapper: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  boxShadow: "0 6px 18px rgba(0,0,0,0.25)"
+  boxShadow: "0 6px 18px rgba(0,0,0,0.25)",
+  zIndex: 500               // ✅ IMPORTANT
 };
 
 const sosButton: React.CSSProperties = {
@@ -386,7 +401,9 @@ const mapTitle: React.CSSProperties = {
 };
 
 const mapContainer: React.CSSProperties = {
-  flex: 1,
+  height: "230px",   // ⭐ FIXED HEIGHT (IMPORTANT)
+  width: "100%",
   borderRadius: "14px",
-  overflow: "hidden"
+  overflow: "hidden",
+  marginTop: "8px"
 };

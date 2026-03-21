@@ -12,4 +12,19 @@ html, body {
 
 .mobile-scroll::-webkit-scrollbar {
   display: none;                /* Chrome/Safari */
+
+}
+
+/* 🔥 Fix Leaflet overlapping sidebar */
+.leaflet-control {
+  z-index: 0 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 0 !important;
+}
+
+.leaflet-pane {
+  z-index: 0 !important;
 }
