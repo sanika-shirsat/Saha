@@ -30,8 +30,10 @@ function Sidebar({ isOpen, onClose }: Props) {
       >
         {[
           { name: "Home", path: "/home" },
+          { name: "Dashboard", path: "/dashboard" },
           { name: "Manage Guardians", path: "/manage-guardian" },
-          { name: "Manage Unsafe Zones", path: "/unsafe-zones" },          { name: "Women’s Law", path: "/womens-law" },
+          { name: "Manage Unsafe Zones", path: "/unsafe-zones" },        
+          { name: "Women’s Law", path: "/womens-law" },
           { name: "Safety Tips", path: "/safety-tips" },
           { name: "Settings", path: "/settings" },
           { name: "About Us", path: "/about" },

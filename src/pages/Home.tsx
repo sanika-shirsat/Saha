@@ -1,3 +1,8 @@
+type Guardian = {
+  name: string;
+  number: string;
+};
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MobileLayout from "../layouts/MobileLayout";
@@ -6,6 +11,11 @@ import Sidebar from "../components/Sidebar";
 import { db } from "../firebase";
 import { ref, onValue } from "firebase/database";
 import UnsafeMap from "../components/UnsafeMap";
+import SOSButton from "../components/SOSButton";
+import { auth } from "../firebase";
+import axios from "axios";
+import { push } from "firebase/database";
+// import Footer from "../components/Footer";
 
 
 
@@ -32,6 +42,35 @@ function Home() {
   console.log("LOCATION:", location);
 
   const [unsafeZones, setUnsafeZones] = useState<any[]>([]);
+  const [guardians, setGuardians] = useState<Guardian[]>([]);
+  const [user, setUser] = useState<any>(null);
+  const primaryGuardian = guardians.length > 0 ? guardians[0] : null;
+
+const [safetyStatus, setSafetyStatus] = useState("🟢 Safe Zone");
+  const [autoTriggered, setAutoTriggered] = useState(false);
+  
+
+  useEffect(() => {
+  const unsub = auth.onAuthStateChanged((u) => {
+    setUser(u);
+  });
+  return () => unsub();
+}, []);
+
+useEffect(() => {
+  if (!user) return;
+
+  const guardianRef = ref(db, `guardians/${user.uid}`);
+
+  onValue(guardianRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      setGuardians(Object.values(data));
+    } else {
+      setGuardians([]);
+    }
+  });
+}, [user]);
 
  useEffect(() => {
 
@@ -83,56 +122,67 @@ function Home() {
   return () => unsub();
 }, []);
 
-  const shareLocation = () => {
+  const shareLocation = async () => {
 
-    if (!location) {
-      alert("Location not ready yet");
-      return;
-    }
+    
 
-    const link = `https://www.google.com/maps?q=${location[0]},${location[1]}`;
-
-    alert("📍 Your Location:\n" + link);
-  };
-
-  const handleSOS = () => {
-
-  if (!navigator.geolocation) {
-    alert("Geolocation is not supported by your browser");
-    return;
+  if (!primaryGuardian) {
+    return alert("👤 Please add a guardian first!");
   }
 
-  navigator.geolocation.getCurrentPosition(async (position) => {
+  try {
+    let currentLocation = location;
 
-    const lat = position.coords.latitude;
-    const lng = position.coords.longitude;
-
-    try {
-
-      const response = await fetch("http://localhost:5000/send-sos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          lat,
-          lng,
-        }),
+    // ✅ fallback (same as SOS)
+    if (!currentLocation) {
+      currentLocation = await new Promise<[number, number]>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            resolve([pos.coords.latitude, pos.coords.longitude]);
+          },
+          (err) => reject(err),
+          {
+            enableHighAccuracy: false,
+            timeout: 3000,
+            maximumAge: 10000
+          }
+        );
       });
-
-      const data = await response.json();
-
-      alert(data.message);
-
-    } catch (error) {
-      console.error(error);
-      alert("Failed to send SOS");
     }
 
-  });
+    const user = auth.currentUser;
+    if (!user) throw new Error("User not logged in");
 
+    const mapsLink = `https://www.google.com/maps?q=${currentLocation[0]},${currentLocation[1]}`;
+
+    // ✅ 1. SEND SMS FIRST
+    await axios.post("http://localhost:5000/send-sos", {
+      guardianNumber: "+91" + primaryGuardian.number.replace(/\D/g, ""),
+      guardianName: primaryGuardian.name,
+      email: user.email,
+      mapsLink,
+      type: "LOCATION"   // 🔥 IMPORTANT
+    });
+
+    // ✅ 2. SAVE TO FIREBASE
+    await push(ref(db, `alerts/${user.uid}`), {
+      type: "LOCATION",   // 🔥 DIFFERENT FROM SOS
+      email: user.email || "no-email",
+      guardianName: primaryGuardian.name,
+      guardianNumber: primaryGuardian.number,
+      mapsLink,
+      timestamp: new Date().toISOString(),
+    });
+
+    alert("📍 Location Shared!");
+    
+  } catch (err) {
+    console.error(err);
+    alert("❌ Failed to share location");
+  }
 };
-  return (
+return (
+ 
 
     <MobileLayout>
       <div style={containerStyle}>
@@ -146,30 +196,39 @@ function Home() {
 
         <div style={contentStyle}>
 
-          {/* STATUS */}
-
-          <div style={statusStyle}>
-            <div style={{ fontSize: 13, opacity: 0.7 }}>
-              Current Status
-            </div>
-
-            <div style={statusRow}>
-              <span style={greenDot}></span>
-              <span style={{ fontWeight: 600 }}>
-                {status}
-              </span>
-            </div>
-
-            <div style={{ fontSize: 13, marginTop: 4 }}>
-              📍 Location Active
-            </div>
-          </div>
+          
 
           {/* GRID */}
+
+          <div style={{ ...cardBase, ...smallCard }}>
+  <div style={{ fontSize: 12, opacity: 0.7 }}>
+    Current Status
+  </div>
+
+  <div style={statusRow}>
+    <span
+      style={{
+        ...greenDot,
+        background:
+          safetyStatus.includes("Unsafe") ? "red" : "green",
+      }}
+    ></span>
+
+    <span style={{ fontWeight: 600 }}>
+      {safetyStatus}
+    </span>
+  </div>
+
+  <div style={{ fontSize: 12 }}>
+    📍 Live Tracking
+  </div>
+</div>
 
           <div style={{ fontWeight: 600, color: "#7A3A5C" }}>
              Quick Safety Tools
           </div>
+
+         
 
           <div style={gridStyle}>
 
@@ -193,7 +252,7 @@ function Home() {
 
             <div
               style={{ ...cardBase, ...bigCard }}
-              onClick={() => navigate("/helplines")}
+              onClick={() => navigate("/nearby-help")}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <div style={iconBox}>🚨</div>
@@ -229,6 +288,11 @@ function Home() {
 
     </div>
 
+    {/* ✅ FOOTER HERE */}
+{/* <Footer /> */}
+
+  <div style={bottomBar}></div>
+
         {/* Bottom Bar */}
          </div>
 
@@ -237,15 +301,14 @@ function Home() {
         {/* SOS */}
 
         <div style={sosWrapper}>
-          <div style={sosButton} onClick={handleSOS}>
-            SOS
-          </div>
+          <SOSButton guardian={primaryGuardian} location={location} />
         </div>
 
       </div>
     </MobileLayout>
   );
 }
+
 
 export default Home;
 
@@ -267,7 +330,7 @@ const contentStyle: React.CSSProperties = {
   flexDirection: "column",
   gap: "20px",
   overflowY: "auto",
-  paddingBottom: "260px",
+  // paddingBottom: "300px",
 };
 
 const statusStyle: React.CSSProperties = {

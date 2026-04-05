@@ -19,6 +19,8 @@ import Settings from "./pages/Settings";
 import Helplines from "./pages/Helplines";
 import ManageUnsafeZones from "./pages/ManageUnsafeZones";
 import ManageGuardian from "./pages/ManageGuardian";
+import Dashboard from "./pages/Dashboard";
+import NearbyHelp from "./pages/NearbyHelp";
 
 
 
@@ -39,6 +41,7 @@ function App() {
         {/* ===== Main App ===== */}
         <Route path="/home" element={<Home />} />
         <Route path="/helplines" element={<Helplines />} />
+        <Route path="/nearby-help" element={<NearbyHelp />} />
 
         {/* ===== Features ===== */}
         <Route path="/fakecall" element={<FakeCall />} />
@@ -54,6 +57,11 @@ function App() {
         <Route path="/safety-tips" element={<SafetyTips />} />
 
         <Route path="/settings" element={<Settings />} />
+
+        <Route path="/dashboard" element={<Dashboard />} />
+
+
+        <Route path="*" element={<Home />} />
 
 
 
