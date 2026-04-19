@@ -21,6 +21,7 @@ import ManageUnsafeZones from "./pages/ManageUnsafeZones";
 import ManageGuardian from "./pages/ManageGuardian";
 import Dashboard from "./pages/Dashboard";
 import NearbyHelp from "./pages/NearbyHelp";
+import Profile from "./pages/Profile";
 
 
 
@@ -59,6 +60,8 @@ function App() {
         <Route path="/settings" element={<Settings />} />
 
         <Route path="/dashboard" element={<Dashboard />} />
+
+        <Route path="/profile" element={<Profile />} />
 
 
         <Route path="*" element={<Home />} />

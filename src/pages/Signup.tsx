@@ -15,7 +15,6 @@ function Signup() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       navigate("/dashboard");
@@ -26,174 +25,271 @@ function Signup() {
 
   return (
     <MobileLayout>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Serif+Display&display=swap');
+
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(18px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .signup-field {
+          width: 100%;
+          height: 52px;
+          border-radius: 14px;
+          background: #fff;
+          border: 1.5px solid #F0D8E8;
+          padding: 0 16px;
+          font-size: 14px;
+          font-family: 'Nunito', sans-serif;
+          font-weight: 600;
+          color: #3D1A2E;
+          outline: none;
+          box-sizing: border-box;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .signup-field::placeholder {
+          color: #C4A0B4;
+          font-weight: 600;
+        }
+
+        .signup-field:focus {
+          border-color: #C97A9B;
+          box-shadow: 0 0 0 3px rgba(201, 122, 155, 0.15);
+        }
+
+        .signup-btn {
+          transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .signup-btn:active {
+          transform: scale(0.97);
+          box-shadow: 0 4px 14px rgba(139, 34, 82, 0.22);
+        }
+
+        .fade-1 { animation: fadeUp 0.5s ease both; animation-delay: 0.05s; }
+        .fade-2 { animation: fadeUp 0.5s ease both; animation-delay: 0.15s; }
+        .fade-3 { animation: fadeUp 0.5s ease both; animation-delay: 0.22s; }
+        .fade-4 { animation: fadeUp 0.5s ease both; animation-delay: 0.29s; }
+        .fade-5 { animation: fadeUp 0.5s ease both; animation-delay: 0.36s; }
+        .fade-6 { animation: fadeUp 0.5s ease both; animation-delay: 0.43s; }
+      `}</style>
+
       <div
         style={{
           position: "relative",
           width: "390px",
           height: "844px",
-          background: "#E9C6FF",
-          fontFamily: "ABeeZee, sans-serif",
+          background: "#FAF0F5",
+          fontFamily: "'Nunito', sans-serif",
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "0 32px",
+          boxSizing: "border-box",
         }}
       >
-        {/* Title */}
-        <h2
+
+        {/* Background blobs */}
+        <div style={{
+          position: "absolute", top: "-70px", right: "-60px",
+          width: "240px", height: "240px", borderRadius: "50%",
+          background: "rgba(201, 122, 155, 0.13)",
+          pointerEvents: "none",
+        }} />
+        <div style={{
+          position: "absolute", bottom: "-60px", left: "-50px",
+          width: "200px", height: "200px", borderRadius: "50%",
+          background: "rgba(139, 34, 82, 0.07)",
+          pointerEvents: "none",
+        }} />
+
+        {/* App name */}
+        <div className="fade-1" style={{ textAlign: "center", marginBottom: "28px" }}>
+          <h1 style={{
+            fontFamily: "'DM Serif Display', serif",
+            fontSize: "42px",
+            color: "#3D1A2E",
+            margin: "0 0 8px",
+            letterSpacing: "1px",
+          }}>
+            Saha
+          </h1>
+          <div style={{
+            width: "36px", height: "3px",
+            background: "linear-gradient(90deg, #C97A9B, #8B2252)",
+            borderRadius: "4px",
+            margin: "0 auto",
+          }} />
+        </div>
+
+        {/* Card */}
+        <div
+          className="fade-2"
           style={{
-            position: "absolute",
-            left: "42px",
-            top: "147px",
-            fontSize: "24px",
-            color: "#7A3A5C",
-            WebkitTextStroke: "0.01px #D8A1B2", // thinner stroke
-            margin: 0,
-          }}
-        >
-          Create Account
-        </h2>
-
-        {/* Subtitle */}
-        <p
-          style={{
-            position: "absolute",
-            left: "42px",
-            top: "185px", // fixed spacing
-            fontSize: "16px",
-            color: "#7A3A5C",
-            margin: 0,
-          }}
-        >
-          Sign up to get started
-        </p>
-
-        <form onSubmit={handleSignup}>
-          {/* Name */}
-          <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            style={{
-              position: "absolute",
-              left: "53px",
-              top: "230px",
-              width: "284px",
-              height: "48px",
-              borderRadius: "12px",
-              background: "#D9D9D9",
-              border: "1px solid #7A3A5C",
-              paddingLeft: "16px",
-              fontSize: "14px",
-              color: "#7A6A72",
-              outline: "none",
-            }}
-          />
-
-          {/* Email */}
-          <input
-            type="email"
-            placeholder="Email ID"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{
-              position: "absolute",
-              left: "53px",
-              top: "300px",
-              width: "284px",
-              height: "48px",
-              borderRadius: "12px",
-              background: "#D9D9D9",
-              border: "1px solid #7A3A5C",
-              paddingLeft: "16px",
-              fontSize: "14px",
-              color: "#7A6A72",
-              outline: "none",
-            }}
-          />
-
-          {/* Password */}
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{
-              position: "absolute",
-              left: "53px",
-              top: "370px",
-              width: "284px",
-              height: "48px",
-              borderRadius: "12px",
-              background: "#D9D9D9",
-              border: "1px solid #7A3A5C",
-              paddingLeft: "16px",
-              fontSize: "14px",
-              color: "#7A6A72",
-              outline: "none",
-            }}
-          />
-
-          {/* Button */}
-          <button
-            type="submit"
-            style={{
-              position: "absolute",
-              left: "50%",
-              transform: "translateX(-50%)", // perfect center
-              top: "450px",
-              width: "163px",
-              height: "38px",
-              borderRadius: "24px",
-              background: "#D8A1B2",
-              border: "none",
-              fontSize: "20px",
-              color: "#7A3A5C",
-              cursor: "pointer",
-            }}
-          >
-            Sign Up
-          </button>
-        </form>
-
-        {/* Login Link */}
-        <p
-          style={{
-            position: "absolute",
-            top: "510px",
             width: "100%",
-            textAlign: "center",
-            fontSize: "14px",
-            color: "#7A6A72",
+            background: "#fff",
+            borderRadius: "24px",
+            border: "1px solid #F0D8E8",
+            padding: "28px 24px 24px",
+            boxShadow: "0 8px 32px rgba(122, 58, 92, 0.10)",
+            boxSizing: "border-box",
           }}
         >
+          {/* Heading */}
+          <div style={{ marginBottom: "22px" }}>
+            <h2 style={{
+              fontFamily: "'DM Serif Display', serif",
+              fontSize: "26px",
+              color: "#3D1A2E",
+              margin: "0 0 4px",
+            }}>
+              Create Account
+            </h2>
+            <p style={{
+              fontSize: "13px",
+              fontWeight: 600,
+              color: "#9B5B7A",
+              margin: 0,
+            }}>
+              Sign up to get started with Saha
+            </p>
+          </div>
+
+          <form onSubmit={handleSignup} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+
+            {/* Name */}
+            <div className="fade-3">
+              <label style={{
+                display: "block",
+                fontSize: "12px",
+                fontWeight: 800,
+                color: "#7A2E56",
+                letterSpacing: "0.5px",
+                textTransform: "uppercase",
+                marginBottom: "6px",
+              }}>
+                Full Name
+              </label>
+              <input
+                type="text"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="signup-field"
+              />
+            </div>
+
+            {/* Email */}
+            <div className="fade-4">
+              <label style={{
+                display: "block",
+                fontSize: "12px",
+                fontWeight: 800,
+                color: "#7A2E56",
+                letterSpacing: "0.5px",
+                textTransform: "uppercase",
+                marginBottom: "6px",
+              }}>
+                Email
+              </label>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="signup-field"
+              />
+            </div>
+
+            {/* Password */}
+            <div className="fade-5">
+              <label style={{
+                display: "block",
+                fontSize: "12px",
+                fontWeight: 800,
+                color: "#7A2E56",
+                letterSpacing: "0.5px",
+                textTransform: "uppercase",
+                marginBottom: "6px",
+              }}>
+                Password
+              </label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="signup-field"
+              />
+            </div>
+
+            {/* Error */}
+            {error && (
+              <div style={{
+                background: "#FEF0F3",
+                border: "1px solid #F5C6D2",
+                borderRadius: "10px",
+                padding: "10px 14px",
+                fontSize: "13px",
+                fontWeight: 600,
+                color: "#A02040",
+              }}>
+                {error}
+              </div>
+            )}
+
+            {/* Sign Up Button */}
+            <div className="fade-6">
+              <button
+                type="submit"
+                className="signup-btn"
+                style={{
+                  width: "100%",
+                  height: "52px",
+                  borderRadius: "50px",
+                  background: "linear-gradient(135deg, #8B2252 0%, #C0476E 100%)",
+                  border: "none",
+                  fontSize: "16px",
+                  fontFamily: "'Nunito', sans-serif",
+                  fontWeight: 800,
+                  color: "#fff",
+                  cursor: "pointer",
+                  letterSpacing: "0.4px",
+                  boxShadow: "0 6px 20px rgba(139, 34, 82, 0.28)",
+                  marginTop: "4px",
+                }}
+              >
+                Sign Up
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+        {/* Login link */}
+        <p className="fade-6" style={{
+          marginTop: "20px",
+          fontSize: "13px",
+          fontWeight: 600,
+          color: "#9B5B7A",
+          textAlign: "center",
+        }}>
           Already have an account?{" "}
           <span
-            style={{
-              color: "#7A3A5C",
-              fontWeight: "bold",
-              cursor: "pointer",
-            }}
             onClick={() => navigate("/login")}
+            style={{ color: "#8B2252", fontWeight: 800, cursor: "pointer" }}
           >
             Login
           </span>
         </p>
 
-        {error && (
-          <p
-            style={{
-              position: "absolute",
-              top: "550px",
-              width: "100%",
-              textAlign: "center",
-              color: "red",
-              fontSize: "13px",
-            }}
-          >
-            {error}
-          </p>
-        )}
       </div>
     </MobileLayout>
   );
